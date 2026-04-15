@@ -14,7 +14,7 @@ from rag import (
     generate_answer, get_history
 )
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', static_url_path='/static')
 app.secret_key = os.environ.get('SECRET_KEY', 'iebs-sms-2024-secret')
 
 # Railway-এ /tmp ব্যবহার করো, local-এ data/ ব্যবহার করো

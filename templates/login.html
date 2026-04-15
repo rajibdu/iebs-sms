@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login — IEBS SMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0f0d;--surface:#111a15;--surface2:#172010;--border:#2a3d28;--gold:#c9a227;--gold2:#f0c94a;--gold-dim:rgba(201,162,39,0.12);--green2:#25a05a;--red:#e05252;--text:#dde8d8;--text2:#8aaa82;--text3:#5a7a52;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Hind Siliguri',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;}
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  padding:36px 32px;width:100%;max-width:380px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+.logo{text-align:center;margin-bottom:28px;}
+.logo-icon{width:56px;height:56px;background:linear-gradient(135deg,var(--gold),var(--green2));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 12px;}
+.logo h1{font-family:'Playfair Display',serif;font-size:18px;color:var(--gold2);}
+.logo p{font-size:12px;color:var(--text3);margin-top:4px;}
+label{display:block;font-size:12px;color:var(--text2);margin-bottom:5px;margin-top:16px;}
+input{
+  width:100%;background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 14px;color:var(--text);font-family:inherit;
+  font-size:14px;outline:none;transition:border-color .2s;
+}
+input:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-dim);}
+.btn{
+  width:100%;margin-top:22px;padding:12px;background:linear-gradient(135deg,var(--gold),#a07820);
+  border:none;border-radius:9px;color:#000;font-family:inherit;font-size:15px;
+  font-weight:600;cursor:pointer;transition:all .2s;
+}
+.btn:hover{filter:brightness(1.1);}
+.error{background:rgba(224,82,82,.1);border:1px solid rgba(224,82,82,.3);color:var(--red);padding:10px 14px;border-radius:8px;font-size:13px;margin-top:14px;}
+.back{display:block;text-align:center;margin-top:16px;font-size:12px;color:var(--text3);text-decoration:none;}
+.back:hover{color:var(--gold2);}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <div class="logo-icon">⚖️</div>
+    <h1>IEBS SMS Admin</h1>
+    <p>শুধুমাত্র অনুমোদিত ব্যবহারকারীর জন্য</p>
+  </div>
+
+  <form method="POST">
+    <label>Username</label>
+    <input type="text" name="username" placeholder="admin" required autofocus>
+
+    <label>Password</label>
+    <input type="password" name="password" placeholder="••••••••" required>
+
+    {% if error %}
+    <div class="error">❌ {{ error }}</div>
+    {% endif %}
+
+    <button type="submit" class="btn">🔐 Login করুন</button>
+  </form>
+
+  <a href="/" class="back">← Chat-এ ফিরুন</a>
+</div>
+</body>
+</html>

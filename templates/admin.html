@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — IEBS SMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0f0d;--surface:#111a15;--surface2:#172010;--surface3:#1e2b18;--border:#2a3d28;--gold:#c9a227;--gold2:#f0c94a;--gold-dim:rgba(201,162,39,0.12);--green:#1a6b3c;--green2:#25a05a;--green-dim:rgba(26,107,60,0.15);--red:#e05252;--text:#dde8d8;--text2:#8aaa82;--text3:#5a7a52;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Hind Siliguri',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+header h1{font-family:'Playfair Display',serif;font-size:17px;color:var(--gold2);}
+header span{font-size:12px;color:var(--text3);}
+.back{background:var(--surface2);border:1px solid var(--border);color:var(--text2);padding:7px 14px;border-radius:7px;font-family:inherit;font-size:12px;cursor:pointer;text-decoration:none;transition:all .2s;}
+.back:hover{border-color:var(--gold);color:var(--gold2);}
+.container{max-width:1000px;margin:0 auto;padding:24px 20px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;}
+.card-title{font-size:14px;font-weight:600;color:var(--gold2);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+label{display:block;font-size:12px;color:var(--text2);margin-bottom:4px;margin-top:12px;}
+label:first-of-type{margin-top:0;}
+input,select,textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:border-color .2s;}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);}
+select option{background:var(--surface2);}
+textarea{resize:vertical;min-height:120px;}
+.btn{padding:10px 20px;border-radius:8px;font-family:inherit;font-size:14px;cursor:pointer;border:none;transition:all .2s;font-weight:500;}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#a07820);color:#000;width:100%;margin-top:14px;}
+.btn-gold:hover{filter:brightness(1.1);}
+.btn-del{background:rgba(224,82,82,.15);color:var(--red);border:1px solid rgba(224,82,82,.3);padding:5px 10px;font-size:12px;border-radius:6px;}
+.alert{padding:11px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none;}
+.alert-ok{background:var(--green-dim);border:1px solid var(--green2);color:#4cc38a;}
+.alert-err{background:rgba(224,82,82,.1);border:1px solid rgba(224,82,82,.3);color:var(--red);}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:700px){.grid{grid-template-columns:1fr;}}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{text-align:left;padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text2);font-size:11px;text-transform:uppercase;letter-spacing:.5px;}
+td{padding:9px 12px;border-bottom:1px solid rgba(42,61,40,.5);}
+tr:hover td{background:var(--surface2);}
+tr:last-child td{border:none;}
+.badge{padding:3px 8px;border-radius:5px;font-size:11px;}
+.badge-income_tax{background:rgba(74,158,255,.15);color:#4a9eff;}
+.badge-vat{background:var(--gold-dim);color:var(--gold2);}
+.badge-customs{background:rgba(188,140,255,.15);color:#bc8cff;}
+.badge-excise{background:rgba(255,166,0,.15);color:#ffa600;}
+.badge-rjsc{background:var(--green-dim);color:#4cc38a;}
+.badge-general{background:rgba(139,170,130,.15);color:var(--text2);}
+.preview{max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text2);font-size:12px;}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
+.stat .n{font-size:26px;font-weight:700;color:var(--gold2);}
+.stat .l{font-size:11px;color:var(--text3);margin-top:3px;}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>⚙️ Admin Panel</h1>
+    <span>IEBS Smart Management System — Knowledge Base</span>
+  </div>
+  <a href="/" class="back">← Chat-এ ফিরুন</a>
+  <a href="/admin/logout" style="display:block;text-align:center;margin-top:8px;font-size:12px;color:var(--red);text-decoration:none;">🚪 Logout</a>
+</header>
+
+<div class="container">
+
+  <div class="stat-row" id="statRow">
+    <div class="stat"><div class="n" id="sBuiltin">-</div><div class="l">Built-in বিধান</div></div>
+    <div class="stat"><div class="n" id="sExtra">{{ items|length }}</div><div class="l">আপনার যোগ করা</div></div>
+    <div class="stat"><div class="n" id="sApi">-</div><div class="l">API Status</div></div>
+  </div>
+
+  <div class="grid">
+    <!-- Add Knowledge -->
+    <div class="card">
+      <div class="card-title">➕ নতুন তথ্য যোগ করুন</div>
+      <div id="addAlert" class="alert"></div>
+
+      <label>বিভাগ *</label>
+      <select id="aCat">
+        <option value="income_tax">আয়কর</option>
+        <option value="vat">ভ্যাট</option>
+        <option value="customs">কাস্টমস</option>
+        <option value="excise">আবগারি</option>
+        <option value="rjsc">RJSC / কোম্পানি</option>
+        <option value="general">সাধারণ</option>
+      </select>
+
+      <label>বিষয়ের শিরোনাম *</label>
+      <input type="text" id="aTopic" placeholder="যেমন: নতুন VAT SRO ২০২৪">
+
+      <label>কীওয়ার্ড (কমা দিয়ে আলাদা করুন)</label>
+      <input type="text" id="aKW" placeholder="ভ্যাট, SRO, নিবন্ধন, VAT">
+
+      <label>আইনের উৎস/ধারা</label>
+      <input type="text" id="aSrc" placeholder="যেমন: SRO No. 200/2024">
+
+      <label>সরকারি লিংক নাম</label>
+      <input type="text" id="aLN" placeholder="NBR VAT">
+      <label>সরকারি লিংক URL</label>
+      <input type="text" id="aLU" placeholder="https://nbr.gov.bd/...">
+
+      <label>বিষয়বস্তু *</label>
+      <textarea id="aContent" placeholder="আইনের বিষয়বস্তু, নিয়মাবলী, ধাপসমূহ এখানে লিখুন..."></textarea>
+
+      <button class="btn btn-gold" onclick="addItem()">✅ জ্ঞানভাণ্ডারে যোগ করুন</button>
+    </div>
+
+    <!-- Gemini API Setup -->
+    <div class="card">
+      <div class="card-title">🔑 Gemini API Setup</div>
+      <p style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:14px;">
+        Gemini API ছাড়াও Built-in knowledge থেকে উত্তর পাবেন।<br>
+        AI উত্তরের জন্য Free API Key নিন।
+      </p>
+
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px;">
+        <div style="font-size:13px;font-weight:600;color:var(--gold2);margin-bottom:10px;">📋 API Key পাওয়ার ধাপ:</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.8;">
+          ১. <a href="https://aistudio.google.com" target="_blank" style="color:var(--gold2);">aistudio.google.com</a> যান<br>
+          ২. Google account দিয়ে login করুন<br>
+          ৩. "Get API Key" → "Create API Key"<br>
+          ৪. Key copy করুন (AIza... দিয়ে শুরু)<br>
+          ৫. .env ফাইলে রাখুন
+        </div>
+      </div>
+
+      <div style="background:var(--surface3);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;color:var(--text2);">
+        <strong style="color:var(--gold2);">.env ফাইলে লিখুন:</strong><br><br>
+        <code style="color:#4cc38a;">GEMINI_API_KEY=AIzaSy...</code><br>
+        <code style="color:#4cc38a;">SECRET_KEY=iebs-2024</code>
+      </div>
+
+      <div style="margin-top:14px;padding:12px;background:rgba(26,107,60,.1);border:1px solid var(--green);border-radius:8px;font-size:12px;color:#4cc38a;">
+        ✅ PythonAnywhere Free Plan-এ Gemini কাজ করে!<br>
+        প্রতিদিন ১৫০০ ফ্রি request পাবেন।
+      </div>
+    </div>
+  </div>
+
+  <!-- Items Table -->
+  <div class="card">
+    <div class="card-title">📚 আপনার যোগ করা তথ্য</div>
+    <table>
+      <thead><tr><th>বিভাগ</th><th>শিরোনাম</th><th>উৎস</th><th>বিষয়বস্তু</th><th></th></tr></thead>
+      <tbody id="tBody">
+        {% if items %}
+          {% for item in items %}
+          <tr id="row-{{ item.id }}">
+            <td><span class="badge badge-{{ item.category }}">{{ item.category }}</span></td>
+            <td><strong>{{ item.topic }}</strong></td>
+            <td style="font-size:12px;color:var(--text3);">{{ item.source or '-' }}</td>
+            <td><div class="preview">{{ item.content[:100] }}...</div></td>
+            <td><button class="btn btn-del" onclick="del({{ item.id }})">🗑️</button></td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr><td colspan="5" style="text-align:center;color:var(--text3);padding:20px;">এখনো কিছু যোগ করা হয়নি</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+async function loadStats() {
+  const r = await fetch('/api/stats');
+  const d = await r.json();
+  document.getElementById('sBuiltin').textContent = d.builtin;
+  document.getElementById('sExtra').textContent = d.extra;
+  document.getElementById('sApi').textContent = d.api_ready ? '✅ Ready' : '❌ নেই';
+}
+loadStats();
+
+function showAlert(id, type, msg) {
+  const el = document.getElementById(id);
+  el.className = `alert alert-${type}`;
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 4000);
+}
+
+async function addItem() {
+  const topic = document.getElementById('aTopic').value.trim();
+  const content = document.getElementById('aContent').value.trim();
+  if (!topic) return showAlert('addAlert','err','শিরোনাম লিখুন');
+  if (!content) return showAlert('addAlert','err','বিষয়বস্তু লিখুন');
+
+  const res = await fetch('/api/admin/add', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      category: document.getElementById('aCat').value,
+      topic, content,
+      keywords: document.getElementById('aKW').value,
+      source: document.getElementById('aSrc').value,
+      link_name: document.getElementById('aLN').value,
+      link_url: document.getElementById('aLU').value
+    })
+  });
+  const d = await res.json();
+  if (d.success) {
+    showAlert('addAlert','ok','✅ সফলভাবে যোগ হয়েছে!');
+    document.getElementById('aTopic').value='';
+    document.getElementById('aContent').value='';
+    document.getElementById('aKW').value='';
+    document.getElementById('aSrc').value='';
+    document.getElementById('aLN').value='';
+    document.getElementById('aLU').value='';
+    loadStats();
+    location.reload();
+  } else {
+    showAlert('addAlert','err','❌ ' + d.message);
+  }
+}
+
+async function del(id) {
+  if(!confirm('মুছে ফেলবেন?')) return;
+  const res = await fetch(`/api/admin/delete/${id}`, {method:'DELETE'});
+  const d = await res.json();
+  if(d.success) { document.getElementById(`row-${id}`)?.remove(); loadStats(); }
+}
+</script>
+</body>
+</html>
